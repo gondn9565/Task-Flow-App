@@ -6,7 +6,7 @@ import {
 } from "../assets/Dummy";
 import { useEffect } from "react";
 import { useState } from "react";
-import { AlignLeft, PlusCircle, Save, X } from "lucide-react";
+import { AlignLeft, CheckCircle, PlusCircle, Save, X } from "lucide-react";
 import axios from "axios";
 import { useCallback } from "react";
 import { Calendar, Flag } from "lucide-react";
@@ -60,7 +60,11 @@ const TaskModel = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
       setError(null);
       try {
         const isEdit = Boolean(taskData.id);
-        const url = isEdit ? `${API_BASE}/${taskData.id}/gp` : `${API_BASE}/gp`;
+        //const url = isEdit ? `${API_BASE}/${taskData.id}/gp` : `${API_BASE}/gp`;
+        const url = isEdit
+          ? `${API_BASE}/api/tasks/${taskData.id}/gp`
+          : `${API_BASE}/api/tasks/gp`;
+
         const resp = await fetch(url, {
           method: isEdit ? "PUT" : "POST",
           headers: getHeaders(),
@@ -68,8 +72,8 @@ const TaskModel = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
         });
         if (!resp.ok) {
           if (resp.status === 401) {
-            return;
             onLogout();
+            return;
             const err = await resp.json();
             throw new Error(err.message || "Failed to save task");
           }
@@ -86,6 +90,7 @@ const TaskModel = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
     },
     [taskData, today, getHeaders, onLogout, onSave, onClose]
   );
+  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/20 z-50  flex items-center justify-center">
       <div className="bg-white border border-purple-100 rounded-xl max-w-md w-full shadow-lg relative p-6 animate-fadeIn">
@@ -130,10 +135,10 @@ const TaskModel = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
           </div>
           <div>
             <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
-              {" "}
               <AlignLeft className="w-4 h-4 text-purple-500" />
+              Description
             </label>
-            <texttarea
+            <textarea
               name="description"
               rows="3"
               onChange={handleChange}
@@ -173,6 +178,48 @@ const TaskModel = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
               />
             </div>
           </div>
+          <div>
+            <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
+              <CheckCircle className="w-4 h-4 text-purple-500" /> Status
+            </label>
+            <div className="flex gap-4 ">
+              {[
+                { val: "yes", label: "Completed" },
+                { val: "no", label: "In Progress" },
+              ].map(({ val, label }) => (
+                <label key={val} className="flex items-center">
+                  <input
+                    type="radio"
+                    name="completed"
+                    value={val}
+                    checked={taskData.completed === val}
+                    onChange={handleChange}
+                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                  />
+                  <span className="ml-2 text-sm text-gray-700">{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-fushia-500 to-purple-600 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 hover:shadow-md transition-all duration-200"
+          >
+            {loading ? (
+              "Saving..."
+            ) : taskData.id ? (
+              <>
+                <Save className="w-4 h-4" />
+                Update Task
+              </>
+            ) : (
+              <>
+                <PlusCircle className="w-4 h-4" />
+                Create Task
+              </>
+            )}
+          </button>
         </form>
       </div>
     </div>
