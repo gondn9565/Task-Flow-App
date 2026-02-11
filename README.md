@@ -42,7 +42,7 @@ This project demonstrates full-stack development skills including frontend desig
 ### Database
 - MongoDB
 
-### Authentication (if implemented)
+### Authentication
 - JWT Authentication
 - Protected Routes
 
