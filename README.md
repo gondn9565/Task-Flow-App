@@ -50,3 +50,26 @@ This project demonstrates full-stack development skills including frontend desig
 
 ## 📂 Project Architecture
 
+task-flow-app/
+│
+├── frontend/ # React Frontend
+│ ├── public/
+│ └── src/
+│ ├── components/ # Reusable UI components
+│ ├── pages/ # Application pages
+│ ├── services/ # API calls
+│ ├── context/ # Global state management
+│ ├── utils/ # Helper functions
+│ └── App.jsx
+│
+├── backend/ # Node & Express Backend
+│ ├── config/ # DB & config files
+│ ├── controllers/ # Business logic
+│ ├── models/ # MongoDB schemas
+│ ├── routes/ # API routes
+│ ├── middleware/ # Auth & validation middleware
+│ └── server.js
+│
+├── .env
+├── package.json
+└── README.md
