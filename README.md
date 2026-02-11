@@ -32,7 +32,7 @@ This project demonstrates full-stack development skills including frontend desig
 ### Frontend
 - React.js
 - HTML5
-- CSS3
+- Tailwind CSS
 - JavaScript
 
 ### Backend
